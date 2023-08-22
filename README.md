@@ -1,4 +1,4 @@
-![image](https://github.com/NevoSwissa/CL-SpawnSelector/assets/96447671/60be3960-62a6-4813-be6d-39b984c5a56f)# CL-SpawnSelector
+# CL-SpawnSelector
 Simple to use spawn selector system with an advanced and modern looking user-interface.
 
 Preview: https://youtu.be/fAdZoYl7lfQ
