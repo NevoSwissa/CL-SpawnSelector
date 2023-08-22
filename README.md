@@ -9,11 +9,11 @@ Light Theme :
 
 Dark Theme:
 
-![image2](https://github.com/NevoSwissa/CL-SpawnSelector/assets/96447671/b556fefe-b3d4-4b0d-a9c8-312651ffc965)
+![imag3e](https://github.com/NevoSwissa/CL-SpawnSelector/assets/96447671/7b0d9069-f650-45eb-a7dc-c45c49ade843)
 
 Natural Theme :
 
-![imag3e](https://github.com/NevoSwissa/CL-SpawnSelector/assets/96447671/7b0d9069-f650-45eb-a7dc-c45c49ade843)
+![image2](https://github.com/NevoSwissa/CL-SpawnSelector/assets/96447671/b556fefe-b3d4-4b0d-a9c8-312651ffc965)
 
 # Features
 
