@@ -9,7 +9,7 @@ Config.ScriptStyle = "light" -- The style you would like the script to be, avail
 Config.EditorPermission = {
     UseGod = false, -- Whether or not you want to allow every god admin to access the editor.
     Permissions = { -- Add to the table citizenids to have permission to the editor.
-        "ELU54826",
+        "CITIZENID",
     },
 }
 
