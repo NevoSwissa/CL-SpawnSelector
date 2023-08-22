@@ -1,0 +1,810 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap");
+
+:root {
+  --primary-color: #f2f2f2;
+  --secondary-color: #333333;
+  --accent-color: #c1c1c1;
+  --main-text-color: #ffffff;
+  --secondary-text-color: #030303;
+  --title-text-color: #CCCCCC;
+  --hover-color: #f1f1f1;
+}
+
+.dark {
+  --primary-color: #04102f;
+  --secondary-color: #003a69;
+  --accent-color: #042148;
+  --main-text-color: #ffffff;
+  --secondary-text-color: #045c8c;
+  --title-text-color: #CCCCCC;
+  --hover-color: #041c24;
+}
+
+.natural {
+  --primary-color: #ece8e4;
+  --secondary-color: #432818;
+  --accent-color: #c9c3c1;
+  --main-text-color: #ffffff;
+  --secondary-text-color: #544443;
+  --title-text-color: #9c8c82;
+  --hover-color: #816e6c;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+}
+
+/* Static Elements */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-text-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: 3px;
+}
+
+.spawn-selector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--primary-color);
+  z-index: 0;
+  opacity: 0.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Map Image */
+.spawn-selector .defaultmap,
+.spawn-editor .defaultmap {
+  width: 100%;
+  height: 100%;
+  background-image: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+:root .defaultmap {
+  background-image: url("Images/default_map.png");
+}
+
+.dark .defaultmap {
+  background-image: url("Images/dark_map.png");
+}
+
+.natural .defaultmap {
+  background-image: url("Images/natural_map.png");
+}
+
+/* Textures */
+.light-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("Images/light_texture.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  z-index: 2;
+}
+
+.dark-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("Images/dark_texture.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.07;
+  z-index: 2;
+}
+
+/* Logo */
+.rp-logo {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  max-width: 250px;
+  max-height: 250px;
+  z-index: 2;
+}
+
+/* Text & Divider */
+.selector-text {
+  position: fixed;
+  top: 30px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--secondary-color);
+  z-index: 2; 
+}
+
+.selector {
+  color: var(--title-text-color); 
+  font-weight: 400;
+  font-style: italic;
+}
+
+.selector-divider {
+  width: 100%;
+  height: 4px;
+  margin-top: -4px;
+  background-color: var(--secondary-color);
+  border-radius: 12px;
+  z-index: 2;
+}
+
+.spawn-text {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px; 
+  font-weight: bold;
+  color: var(--secondary-color);
+  z-index: 2; 
+}
+
+/* Spawn Selector Buttons */
+.buttons-container {
+  position: fixed;
+  top: 30px;
+  right: 25px;
+  z-index: 2;
+  display: flex;
+}
+
+.buttons-container button {
+  margin-left: 10px;
+  padding: 12px 17px;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--main-text-color);
+  background-color: var(--accent-color);
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.buttons-container button i {
+  margin-right: 5px;
+  color: var(--secondary-color);
+  font-weight: 25px;
+  opacity: 0.59;
+}
+
+.buttons-container button:hover {
+  background-color: var(--hover-color);
+  color: var(--secondary-text-color);
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+/* Spawn Selector Location Spawner */
+.spawn-box {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 205px;
+  background-color: var(--accent-color);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.spawn-box .image {
+  border: 2px solid var(--primary-color);
+  display: block;
+  width: 100%;
+  height: 30%;
+  box-sizing: border-box;
+}
+
+.spawn-box .label {
+  margin-top: 5px;
+  margin-left: 5px;
+  font-size: 20px;
+  color: var(--secondary-color);
+  font-weight: bolder;
+  text-align: left;
+}
+
+.spawn-box .icon {
+  color: var(--secondary-color);
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+.spawn-box .street {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--main-text-color);
+  margin-top: -9.5%;
+  margin-left: 5px;
+  text-align: left;
+}
+
+.spawn-box .divider {
+  width: 100%;
+  height: 3px;
+  margin-top: -5%;
+  background-color: var(--main-text-color);
+}
+
+.spawn-box .divider.under-people {
+  margin-top: 2.5%;
+}
+
+.spawn-box .people-container {
+  display: flex;
+  align-items: center;
+  background: var(--secondary-color);
+  border-radius: 12px;
+  margin-top: 5px;
+  margin-left: 5px;
+  padding: 3px;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.spawn-box .people-text {
+  color: var(--main-text-color);
+  font-size: 16px;
+  margin-right: 5px;;
+}
+
+.spawn-box .people-icon {
+  color: var(--main-text-color);
+  margin-right: 5px;;
+  margin-left: 7px;;
+}
+
+.spawn-box .create-icon-btn {
+  margin-top: 7px;
+  height: 25px;
+  font-size: 14px;
+}
+
+/* Spawn Selector New House */
+.new-house-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bolder;
+  font-style: italic;
+  color: var(--secondary-text-color);
+  z-index: 2;
+}
+
+/* Spawn Selector Houses Spawner */
+.house-box {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 315px;
+  height: auto;
+  max-height: 370px;
+  background-color: var(--accent-color);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border-radius: 3px;
+  z-index: 2;
+  overflow-y: auto;
+  margin-bottom: 5px;
+}
+
+.house-box .label {
+  font-weight: bold;
+  text-align: center;
+  color: var(--main-text-color);
+  font-size: 19px;
+  margin-top: 5px;
+}
+
+.house-box .divider {
+  width: 100%;
+  height: 3px;
+  margin-top: -5%;
+  background-color: var(--main-text-color);
+}
+
+.house-box .house {
+  padding: 10px;
+  border-bottom: 3px solid var(--main-text-color);
+  cursor: pointer;
+}
+
+.house-box .create-icon-btn {
+  margin-top: 7px;
+  height: 25px;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.house-box .no-houses {
+  font-weight: normal;
+  font-style: italic;
+  text-align: center;
+  color: var(--main-text-color);
+  font-size: 17px;
+}
+
+/* Spawn Editor */
+.spawn-editor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--primary-color);
+  z-index: 1;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Spawn Editor Location Maker */
+.new-box {
+  display: flex;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  right: 100%;
+  width: 350px;
+  height: 355px;
+  border-radius: 3px;
+  background-color: var(--accent-color);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  z-index: 2;
+  opacity: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-btn {
+  margin-right: 10px;
+}
+
+.box-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--main-text-color);
+  text-align: center;
+}
+
+/* Spawn Editor Location Maker DONT ASK  WHATS THIS (: */
+.new-box::before,
+.new-box::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--main-text-color);
+}
+
+.new-box::before {
+  top: 32px;
+}
+
+.new-box::after {
+  top: 90px;
+}
+
+/* Spawn Editor Location Maker Example */
+.location-box {
+  margin-top: -230px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.location-icon {
+  width: 35px;
+  height: 35px;
+  background-color: #E76FF1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-right: 5px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.location-icon i {
+  color: var(--secondary-text-color);
+  font-size: 18px;
+}
+
+.location-text {
+  font-size: 16px;
+  font-weight: bolder;
+  color: var(--secondary-text-color);
+  background-color: var(--main-text-color);
+  padding: 0px 7px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border-radius: 2px;
+}
+
+.designed-location {
+  position: absolute;
+  top: 90%;
+  left: 50%; 
+  display: flex;
+  align-items: center;
+  color: var(--secondary-text-color);
+  z-index: 2;
+}
+
+.selector-location {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  color: var(--secondary-text-color);
+  z-index: 2;
+}
+
+.house-location {
+  display: flex;
+  align-items: center;
+  color: var(--secondary-text-color);
+  z-index: 2;
+}
+
+.designed-location .location-icon {
+  cursor: grab;
+}
+
+.designed-location .location-icon:active {
+  cursor: grabbing; 
+}
+
+/* Spawn Editor Location Maker Inputs */
+.input-container {
+  position: relative;
+  margin-top: 90px;
+  width: 80%;
+}
+
+.input-container input[type="text"] {
+  font-size: 16px;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid var(--main-text-color);
+  color: var(--main-text-color);
+  padding: 5px 0;
+  background-color: transparent;
+  outline: none;
+}
+
+.input-container .label {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  color: var(--main-text-color);
+  pointer-events: none;
+}
+
+.input-container input[type="text"]:focus ~ .label,
+.input-container input[type="text"]:valid ~ .label 
+.input-container input[type="text"].has-content ~ .label {
+  top: -2px;
+  font-size: 16px;
+  color: var(--secondary-text-color);
+}
+
+.input-container .underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: var(--secondary-text-color);
+  transform: scaleX(0);
+  transition: all 0.3s ease;
+}
+
+.input-container input[type="text"]:focus ~ .underline,
+.input-container input[type="text"]:valid ~ .underline
+.input-container input[type="text"].has-content ~ .underline {
+  transform: scaleX(1);
+}
+
+.icon-input {
+  margin-top: 2px;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid var(--main-text-color);
+  padding: 5px 0;
+  background-color: transparent;
+  outline: none;
+}
+
+.icon-input-container {
+  margin-top: 10px;
+}
+
+.input-divider {
+  width: 100%;
+  height: 3px;
+  background-color: var(--main-text-color);
+  margin-top: 15px;
+}
+
+/* Spawn Editor Location Maker Colors */
+.color-picker-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.color-circle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.color-circle-wrapper:first-child {
+  margin-right: 60px;
+}
+
+.color-circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.color-circle i {
+  color: var(--main-text-color);
+}
+
+.color-label {
+  color: var(--main-text-color);
+  margin-top: 2px;
+  font-size: 16px;
+}
+
+.color-picker {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.create-icon-btn {
+  margin: 0;
+  margin-top: 10px;
+  padding: 5px;
+  width: 100%;
+  background-color: var(--main-text-color);
+  color: var(--secondary-text-color);
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.create-icon-btn:hover {
+  background-color: var(--hover-color);
+  transition: background-color 0.3s, color 0.3s; 
+}
+
+/* Spawn Editor Location Creation */
+.create-box {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  height: 110px;
+  background-color: var(--accent-color);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.create-box .header {
+  font-weight: bold;
+  text-align: center;
+  color: var(--main-text-color);
+  font-size: 14px;
+}
+
+.create-box .divider {
+  width: 100%;
+  height: 3px;
+  background-color: var(--main-text-color);
+}
+
+.create-box .under-circle-margin {
+  margin-top: 5px;
+}
+
+.create-box .create-icon-btn {
+  margin-top: 5px;
+  height: 25px;
+  font-size: 14px;
+}
+
+.create-box .color-picker-container {
+  margin-top: 5px;
+}
+
+.create-box .color-circle-wrapper:first-child {
+  margin-right: 20px;
+}
+
+/* Spawn Editor Notifications */
+.notification-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--main-text-color);
+  color: var(--secondary-text-color);
+  padding: 16px;
+  text-align: center;
+  box-sizing: border-box;
+  transform: translateY(100%);
+  z-index: 2;
+  transition: transform 0.3s ease-in-out;
+}
+
+.notification-content {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Spawn Editor Confirmation */
+.confirmation-box {
+  position: fixed;
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 250px;
+  border-radius: 3px;
+  background-color: var(--accent-color);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  z-index: 2;
+}
+
+.confirmation-box header {
+  margin-top: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--main-text-color);
+  text-align: center;
+}
+
+.confirmation-box p {
+  font-size: 17px;
+  text-align: center;
+}
+
+.confirmation-header-divider {
+  margin-top: 2px;
+}
+
+/* Spawn Editor Blur */
+.blur-effect {
+  filter: blur(4px);
+}
+
+/* Spawn Editor Location Editor */
+.edit-box {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 185px;
+  height: 180px;
+  background-color: var(--accent-color);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.edit-box .header {
+  font-weight: bold;
+  text-align: center;
+  color: var(--main-text-color);
+  font-size: 14px;
+}
+
+.edit-box .divider {
+  width: 100%;
+  height: 3px;
+  background-color: var(--main-text-color);
+}
+
+.edit-box .color-picker-container {
+  margin-top: 5px;
+  gap: 20px;
+}
+
+.edit-box .color-circle-wrapper:first-child {
+  margin-right: 0;
+}
+
+.edit-box .color-circle {
+  margin: 5px 0;
+}
+
+.edit-box .under-input-margin {
+  margin-top: 12px;
+  margin-bottom: 7px;
+}
+
+.edit-box .under-circles-margin {
+  margin-top: 5px;
+}
+
+.edit-box .create-icon-btn {
+  margin-top: auto;
+  margin-bottom: 5px;
+  height: 25px;
+  font-size: 14px;
+}
+
+.edit-box .input-container {
+  margin-top: 10px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.edit-box .input-container input[type="text"] {
+  font-size: 14px;
+}
+
+.edit-box .input-container input[type="text"]:focus ~ .label,
+.edit-box .input-container input[type="text"]:valid ~ .label 
+.edit-box .input-container input[type="text"].has-content ~ .label {
+  font-size: 14px;
+}
+
+.edit-box .icon-input-container {
+  margin-top: 0px;
+}

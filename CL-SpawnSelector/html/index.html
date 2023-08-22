@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+  		<title>CL-SpawnSelector</title>
+		<meta charset="UTF-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	</head>
+	<body>
+		<div class="spawn-selector">
+			<img class="light-texture">
+			<img class="dark-texture">
+			<img class="defaultmap">
+			<img class="rp-logo" src=""> 
+			<div class="selector-text">
+				SPAWN<span class="selector">SELECTOR</span>
+				<div class="selector-divider"></div>
+			</div>
+			<label class="spawn-text">Choose your spawn place !</label>
+			<div class="buttons-container">
+				<button class="houses-locations-btn">
+					<i class="fas fa-house"></i> Houses
+				</button>
+				<button class="last-location-btn">
+					<i class="fas fa-thumbtack"></i> Last Location
+				</button>
+			</div>
+			<div class="house-box"></div>
+			<div class="spawn-box"></div>
+		</div>
+		<div class="spawn-editor">
+			<img class="light-texture">
+			<img class="dark-texture">
+			<img class="defaultmap">
+			<img class="rp-logo" src="">
+			<div class="selector-text">
+				SPAWN<span class="selector">EDITOR</span>
+				<div class="selector-divider"></div>
+			</div>
+			<label class="spawn-text">Add and modify locations !</label>
+			<div class="buttons-container">
+				<div class="new-box">
+				  	<div class="box-content">Location Maker</div>
+					<div class="location-box" id="exampleLocation">
+						<div class="location-icon">
+						  	<i class="fas fa-location-crosshairs"></i>
+						</div>
+						<div class="location-text" id="locationText">Example</div>
+					</div>
+					<div class="input-container">
+						<input type="text" class="location-input creator" required maxlength="23">
+						<span class="location-label label">Enter location name</span>
+						<span class="underline"></span>
+					</div>
+					<div class="input-container icon-input-container">
+						<input type="text" class="icon-input creator" required>
+						<span class="icon-label label creator">Enter icon name</span>
+						<span class="underline"></span>
+					</div>
+					<div class="input-divider"></div>
+					<div class="color-picker-container">
+						<div class="color-circle-wrapper">
+						  	<div class="color-circle colors" id="background-color-circle">
+								<i class="fas fa-fill"></i>
+						  	</div>
+						  	<span class="color-label">BG Color</span>
+						  	<input type="color" class="color-picker creator" id="background-color-picker">
+						</div>
+						<div class="color-circle-wrapper">
+						  	<div class="color-circle colors" id="icon-color-circle">
+								<i class="fas fa-paint-brush"></i>
+						  	</div>
+						  	<span class="color-label">Icon Color</span>
+						  	<input type="color" class="color-picker creator" id="icon-color-picker">
+						</div>
+					</div> 
+					<div class="input-divider"></div>
+					<div class="create-icon-btn new-loc-btn">CREATE LOCATION</div>
+				</div>
+				<button class="new-btn">
+				  	<i class="fas fa-map-location"></i> New
+				</button>
+			</div>
+			<div class="confirmation-box">
+				<header>Information</header>
+				<div class="input-divider confirmation-header-divider"></div>
+				<p>After creating the location, hover to see its text. Left Click to edit the location.</p>
+				<p>Make sure to add the location coords and image in the config.</p>
+				<div class="input-divider"></div>
+				<div class="create-icon-btn create-btn">CONFIRM</div>
+			</div>
+			<div class="edit-box">
+				<div class="header">Location Editor</div>
+				<div class="divider"></div>
+				<div class="color-picker-container">
+					<div class="color-circle-wrapper">
+						<div class="color-circle editors" id="editors-delete-circle">
+							<i class="fas fa-trash"></i>
+						</div>
+					</div>
+					<div class="color-circle-wrapper">
+						<div class="color-circle editors" id="editors-background-circle">
+							<i class="fas fa-fill"></i>
+						</div>
+						<input type="color" class="color-picker editor" id="background-color-picker">
+					</div>
+					<div class="color-circle-wrapper">
+						<div class="color-circle editors" id="editors-icon-color-circle">
+							<i class="fas fa-paint-brush"></i>
+						</div>
+						<input type="color" class="color-picker editor" id="icon-color-picker">
+					</div>
+				</div>
+				<div class="divider under-circles-margin"></div>
+				<div class="input-container">
+					<input type="text" class="icon-input editor" required>
+					<span class="icon-label label editor">Enter icon name</span>
+					<span class="underline"></span>
+				</div>
+				<div class="divider under-input-margin"></div>
+				<div class="create-icon-btn actions-btn">CHOOSE A BUTTON</div>
+			</div>
+		</div>
+		<div class="notification-container" id="notificationContainer">
+			<div class="notification-content" id="notificationContent"></div>
+		</div>
+		<div class="create-box">
+			<div class="header">
+				Location
+				<div class="divider"></div>
+				<div class="color-picker-container">
+					<div class="color-circle-wrapper">
+						<div class="color-circle makers" id="makers-icon-color-circle">
+							<i class="fas fa-trash"></i>
+						</div>
+					</div>
+					<div class="color-circle-wrapper">
+						<div class="color-circle makers" id="makers-background-color-circle">
+							<i class="fas fa-circle-check"></i>
+						</div>
+					</div>
+				</div>
+				<div class="divider under-circle-margin"></div>
+				<div class="create-icon-btn confirm-btn">CHOOSE A BUTTON</div>
+			</div>
+		</div>
+  		<script src="custom.js"></script>
+	</body>
+</html>
