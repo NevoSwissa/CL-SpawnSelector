@@ -436,8 +436,7 @@ $(document).ready(function() {
 
       designedLocationElement.setAttribute('data-location-id', locationCounter++);
   
-      designedLocationElement.style.top = screenPosition.top + 'px';
-      designedLocationElement.style.left = screenPosition.left + 'px';
+      positionDesignedLocation(designedLocationElement, screenPosition);
 
       const iconContainer = designedLocationElement.querySelector('.location-icon');
       iconContainer.style.cursor = 'pointer';
@@ -447,6 +446,17 @@ $(document).ready(function() {
 
       designedLocationElement.style.display = 'none';
     }
+  }
+
+  function positionDesignedLocation(element, screenPosition) {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    
+    const desiredLeft = (screenPosition.left / screenWidth) * 100;
+    const desiredTop = (screenPosition.top / screenHeight) * 100;
+    
+    element.style.left = `${desiredLeft}%`;
+    element.style.top = `${desiredTop}%`;
   }
 
   function closeHousesBox() {

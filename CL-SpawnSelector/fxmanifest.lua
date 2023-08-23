@@ -18,7 +18,7 @@ server_scripts {
 }
 
 files {
-    	'html/Images/*.png',
+    'html/Images/*.png',
 	'html/*',
 }
 
