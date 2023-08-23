@@ -6,13 +6,13 @@ local inSpawnEditor = false
 
 local disableStyleChanges = false
 
+local isNew = false
+
 local skyCamera = nil
 
 local Houses = {}
 
 local apartments = {}
-
-local isNew = false
 
 RegisterNetEvent("onResourceStart", function()
     QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function() end, { type = "locations", target = "admins" })
@@ -303,10 +303,6 @@ RegisterNetEvent('CL-SpawnSelector:RefreshLocations', function(locations, type)
         type = type,
         locations = locations,
     })
-end)
-
-RegisterCommand("spawnselector", function()
-    TriggerEvent('qb-spawn:client:openUI', true)
 end)
 
 RegisterCommand("spawneditor", function()
