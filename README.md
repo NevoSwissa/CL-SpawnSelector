@@ -26,6 +26,8 @@ Natural Theme :
 
 To use CL-SpawnSelector, simply drag & drop the resource after making sure the resource is called CL-SpawnSelector and not CL-SpawnSelector-main, then run the SQL table `cl_spawnselector`. After that set your server logo and permissions for the editor in `config.lua`. 
 
+Make sure to remove the dependency `qb-spawn` in `qb-multicharacter` at line 36 in `fxmanifest.lua`.
+
 When creating a new location using the editor make sure to add the necessary data to the `config.lua > Config.Locations`.
 
 # Contributing
