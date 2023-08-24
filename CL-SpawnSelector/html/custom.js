@@ -178,8 +178,17 @@ $(document).ready(function() {
       const rect = designedLocationElement.getBoundingClientRect();
       const top = rect.top;
       const left = rect.left;
-  
-      designedLocation.screenPosition = { top, left };
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      designedLocation.screenPosition = {
+        top,
+        left,
+        resolution: {
+          width: screenWidth,
+          height: screenHeight
+        }
+      };
       $.post(`https://${GetParentResourceName()}/modifyData`, JSON.stringify({
         type: "addlocation",
         locationData: designedLocation,
@@ -452,11 +461,17 @@ $(document).ready(function() {
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
     
-    const desiredLeft = (screenPosition.left / screenWidth) * 100;
-    const desiredTop = (screenPosition.top / screenHeight) * 100;
+    const { left, top, resolution } = screenPosition;
+    const { width: originalWidth, height: originalHeight } = resolution;
+
+    const widthRatio = screenWidth / originalWidth;
+    const heightRatio = screenHeight / originalHeight;
+
+    const desiredLeft = left * widthRatio;
+    const desiredTop = top * heightRatio;
     
-    element.style.left = `${desiredLeft}%`;
-    element.style.top = `${desiredTop}%`;
+    element.style.left = `${desiredLeft}px`;
+    element.style.top = `${desiredTop}px`;
   }
 
   function closeHousesBox() {
