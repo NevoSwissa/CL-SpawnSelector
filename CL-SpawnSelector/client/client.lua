@@ -14,10 +14,6 @@ local Houses = {}
 
 local apartments = {}
 
-RegisterNetEvent("onResourceStart", function()
-    QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function() end, { type = "locations", target = "admins" })
-end)
-
 if Config.ScriptStyle == "dark" or Config.ScriptStyle == "natural" then
     disableStyleChanges = true
 end
@@ -96,7 +92,7 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
             TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
             TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
         elseif Config.Housing == "ps-housing" then
-            local property_id = data.houses.house.property_id
+            local property_id = data.houses.property_id
             TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
         end
         PostSpawnPlayer()
@@ -148,10 +144,16 @@ RegisterNUICallback("getHouses", function(data, cb)
             for i = 1, (#houses), 1 do
                 local house = houses[i]
 
-                myHouses[#myHouses+1] = {
+                local houseData = {
                     house = house,
                     label = GenerateHouseLabel(house),
                 }
+
+                if Config.Housing == "ps-housing" then
+                    houseData.property_id = house.property_id
+                end
+
+                myHouses[#myHouses+1] = houseData
             end
         end
 
