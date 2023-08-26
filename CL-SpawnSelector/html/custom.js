@@ -519,7 +519,7 @@ $(document).ready(function() {
           bigTextElement.remove();
         }
 
-        $('.house-box').hide();
+        $('.house-box, .selector-location').hide();
         houseBoxIsOpen = false;
         
         if (!isHouse) {

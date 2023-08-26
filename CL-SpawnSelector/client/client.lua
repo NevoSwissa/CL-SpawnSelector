@@ -92,7 +92,7 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
             TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
             TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
         elseif Config.Housing == "ps-housing" then
-            local property_id = data.houses.property_id
+            local property_id = data.houses.house.property_id
             TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
         end
         PostSpawnPlayer()
@@ -144,16 +144,10 @@ RegisterNUICallback("getHouses", function(data, cb)
             for i = 1, (#houses), 1 do
                 local house = houses[i]
 
-                local houseData = {
-                    house = house,
-                    label = GenerateHouseLabel(house),
+                myHouses[#myHouses+1] = {
+                    house = house.house,
+                    label = GenerateHouseLabel(house.house),
                 }
-
-                if Config.Housing == "ps-housing" then
-                    houseData.property_id = house.property_id
-                end
-
-                myHouses[#myHouses+1] = houseData
             end
         end
 
