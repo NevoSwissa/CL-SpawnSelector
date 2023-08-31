@@ -24,11 +24,62 @@ Natural Theme :
 
 # Usage
 
-To use CL-SpawnSelector, simply drag & drop the resource after making sure the resource is called CL-SpawnSelector and not CL-SpawnSelector-main, then run the SQL table `cl_spawnselector`. After that set your server logo and permissions for the editor in `config.lua`. 
+DO NOT SKIP ANY STEPS !
 
-Make sure to remove the dependency `qb-spawn` in `qb-multicharacter` at line 36 in `fxmanifest.lua`.
+Step 1 - General Usage
 
-When creating a new location using the editor make sure to add the necessary data to the `config.lua > Config.Locations`.
+To use CL-SpawnSelector, simply drag & drop the resource after making sure the resource is called CL-SpawnSelector and not CL-SpawnSelector-main, then run the SQL table `cl_spawnselector`. After that set your server logo and permissions for the editor in `config.lua`. When creating a new location using the editor add the necessary data to the `config.lua > Config.Locations`.
+
+Step 2 - Remove Dependecy
+
+Remove the dependency `qb-spawn` in `qb-multicharacter` at line 36 in `fxmanifest.lua`.
+
+Step 3 - Modify Prison
+
+Modify the `qb-prison` resource by heading to `qb-prison > client > main.lua` search for the event `prison:client:Enter` (Line 207) and replace it with this updated event :
+Additionally, you can just add `and invokingResource ~= 'CL-SpawnSelector'` to line 209.
+
+`lua
+RegisterNetEvent('prison:client:Enter', function(time)
+	local invokingResource = GetInvokingResource()
+	if invokingResource and invokingResource ~= 'CL-SpawnSelector' and invokingResource ~= 'qb-policejob' and invokingResource ~= 'qb-ambulancejob' and invokingResource ~= GetCurrentResourceName() then
+		-- Use QBCore.Debug here for a quick and easy way to print to the console to grab your attention with this message
+		QBCore.Debug({('Player with source %s tried to execute prison:client:Enter manually or from another resource which is not authorized to call this, invokedResource: %s'):format(GetPlayerServerId(PlayerId()), invokingResource)})
+		return
+	end
+
+	QBCore.Functions.Notify( Lang:t("error.injail", {Time = time}), "error")
+
+	TriggerEvent("chatMessage", "SYSTEM", "warning", "Your property has been seized, you'll get everything back when your time is up..")
+	DoScreenFadeOut(500)
+	while not IsScreenFadedOut() do
+		Wait(10)
+	end
+	local RandomStartPosition = Config.Locations.spawns[math.random(1, #Config.Locations.spawns)]
+	SetEntityCoords(PlayerPedId(), RandomStartPosition.coords.x, RandomStartPosition.coords.y, RandomStartPosition.coords.z - 0.9, 0, 0, 0, false)
+	SetEntityHeading(PlayerPedId(), RandomStartPosition.coords.w)
+	Wait(500)
+	TriggerEvent('animations:client:EmoteCommandStart', {RandomStartPosition.animation})
+
+	inJail = true
+	jailTime = time
+	local tempJobs = {}
+	local i = 1
+	for k in pairs(Config.Locations.jobs) do
+		tempJobs[i] = k
+		i += 1
+	end
+	currentJob = tempJobs[math.random(1, #tempJobs)]
+	CreateJobBlip(true)
+	TriggerServerEvent("prison:server:SetJailStatus", jailTime)
+	TriggerServerEvent("prison:server:SaveJailItems", jailTime)
+	TriggerServerEvent("InteractSound_SV:PlayOnSource", "jail", 0.5)
+	CreateCellsBlip()
+	Wait(2000)
+	DoScreenFadeIn(1000)
+	QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
+end)
+`
 
 # Contributing
 
