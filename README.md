@@ -39,7 +39,7 @@ Step 3 - Modify Prison
 Modify the `qb-prison` resource by heading to `qb-prison > client > main.lua` search for the event `prison:client:Enter` (Line 207) and replace it with this updated event :
 Additionally, you can just add `and invokingResource ~= 'CL-SpawnSelector'` to line 209.
 
-`lua
+```lua
 RegisterNetEvent('prison:client:Enter', function(time)
 	local invokingResource = GetInvokingResource()
 	if invokingResource and invokingResource ~= 'CL-SpawnSelector' and invokingResource ~= 'qb-policejob' and invokingResource ~= 'qb-ambulancejob' and invokingResource ~= GetCurrentResourceName() then
@@ -79,7 +79,7 @@ RegisterNetEvent('prison:client:Enter', function(time)
 	DoScreenFadeIn(1000)
 	QBCore.Functions.Notify( Lang:t("error.do_some_work", {currentjob = Config.Jobs[currentJob] }), "error")
 end)
-`
+```
 
 # Contributing
 
