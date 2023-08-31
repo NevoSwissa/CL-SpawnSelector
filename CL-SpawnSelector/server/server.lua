@@ -93,19 +93,6 @@ function GetPlayerPermissions(source)
     end
 end
 
-function GetAdmins(callback)
-    local admins = {}
-    local players = QBCore.Functions.GetQBPlayers()   
-
-    for _, v in ipairs(players) do
-        if GetPlayerPermissions(v.PlayerData.source) then
-            table.insert(admins, v.PlayerData.source)
-        end
-    end
-
-    callback(admins)
-end
-
 QBCore.Functions.CreateCallback("CL-SpawnSelector:GetInfo", function(source, cb, data)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
@@ -124,19 +111,7 @@ QBCore.Functions.CreateCallback("CL-SpawnSelector:GetInfo", function(source, cb,
                     table.insert(locations, locationData)
                 end
 
-                if data.target == "admins" then
-                    GetAdmins(function(admins)
-                        for k, v in ipairs(admins) do
-                            TriggerClientEvent("CL-SpawnSelector:RefreshLocations", v, locations, "editor")
-                        end
-                    end)
-                elseif data.target == "players" then
-                    local players = QBCore.Functions.GetQBPlayers()
-
-                    for _, v in ipairs(players) do
-                        TriggerClientEvent("CL-SpawnSelector:RefreshLocations", v.PlayerData.source, locations, "selector")
-                    end
-                end
+                cb(locations)
             else
                 cb({})
             end

@@ -14,10 +14,6 @@ local Houses = {}
 
 local apartments = {}
 
-RegisterNetEvent("onResourceStart", function()
-    isNew = false
-end)
-
 if Config.ScriptStyle == "dark" or Config.ScriptStyle == "natural" then
     disableStyleChanges = true
 end
@@ -35,71 +31,95 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
         if isNew then
             cb("new")
         else
-            PreSpawnPlayer()
-            QBCore.Functions.GetPlayerData(function(pd)
-                ped = PlayerPedId()
-                SetEntityCoords(ped, pd.position.x, pd.position.y, pd.position.z)
-                SetEntityHeading(ped, pd.position.a)
-                FreezeEntityPosition(ped, false)
+            local inJail = IsPlayerInJail(function(inJailStatus)
+                PreSpawnPlayer()
+                if not inJailStatus then
+                    QBCore.Functions.GetPlayerData(function(pd)
+                        ped = PlayerPedId()
+                        SetEntityCoords(ped, pd.position.x, pd.position.y, pd.position.z)
+                        SetEntityHeading(ped, pd.position.a)
+                        FreezeEntityPosition(ped, false)
+                    end)
+                    if Config.Housing == "qb-housing" then
+                        if insideMeta.house ~= nil then
+                            local houseId = insideMeta.house
+                            TriggerEvent('qb-houses:client:LastLocationHouse', houseId)
+                        elseif insideMeta.apartment.apartmentType ~= nil or insideMeta.apartment.apartmentId ~= nil then
+                            local apartmentType = insideMeta.apartment.apartmentType
+                            local apartmentId = insideMeta.apartment.apartmentId
+                            TriggerEvent('qb-apartments:client:LastLocationHouse', apartmentType, apartmentId)
+                        end
+                    elseif Config.Housing == "ps-housing" then
+                        if insideMeta.property_id ~= nil then
+                            local property_id = insideMeta.property_id
+                            TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
+                        end
+                    end
+                    TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                    TriggerEvent('QBCore:Client:OnPlayerLoaded')
+                else
+                    TriggerEvent("prison:client:Enter", inJailStatus)
+                end
+                PostSpawnPlayer()
             end)
-            if Config.Housing == "qb-housing" then
-                if insideMeta.house ~= nil then
-                    local houseId = insideMeta.house
-                    TriggerEvent('qb-houses:client:LastLocationHouse', houseId)
-                elseif insideMeta.apartment.apartmentType ~= nil or insideMeta.apartment.apartmentId ~= nil then
-                    local apartmentType = insideMeta.apartment.apartmentType
-                    local apartmentId = insideMeta.apartment.apartmentId
-                    TriggerEvent('qb-apartments:client:LastLocationHouse', apartmentType, apartmentId)
-                end
-            elseif Config.Housing == "ps-housing" then
-                if insideMeta.property_id ~= nil then
-                    local property_id = insideMeta.property_id
-                    TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
-                end
-            end
-            TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
-            TriggerEvent('QBCore:Client:OnPlayerLoaded')
-            PostSpawnPlayer()
         end
     elseif data.type == "maplocation" then
-        PreSpawnPlayer()
-        SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z)
-        TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
-        TriggerEvent('QBCore:Client:OnPlayerLoaded')
-        if Config.Housing == "qb-housing" then
-            TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
-            TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
-        elseif Config.Housing == "ps-housing" then
-            TriggerServerEvent('ps-housing:server:resetMetaData')
-        end
-        Wait(500)
-        SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z - 1.0001)
-        SetEntityHeading(ped, data.coords.w)
-        PostSpawnPlayer()
+        local inJail = IsPlayerInJail(function(inJailStatus)
+            PreSpawnPlayer()
+            if not inJailStatus then
+                SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z)
+                TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                TriggerEvent('QBCore:Client:OnPlayerLoaded')
+                if Config.Housing == "qb-housing" then
+                    TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
+                    TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
+                elseif Config.Housing == "ps-housing" then
+                    TriggerServerEvent('ps-housing:server:resetMetaData')
+                end
+                Wait(500)
+                SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z - 1.0001)
+                SetEntityHeading(ped, data.coords.w)
+            else
+                TriggerEvent("prison:client:Enter", inJailStatus)
+            end
+            PostSpawnPlayer()
+        end)
     elseif data.type == "apartments" then
-        isNew = false
-        PreSpawnPlayer()
-        if Config.Housing == "qb-housing" then
-            TriggerServerEvent("apartments:server:CreateApartment", FindApartmentIndexByLabel(data.label), data.label)
-        elseif Config.Housing == "ps-housing" then
-            TriggerServerEvent("ps-housing:server:createNewApartment", FindApartmentIndexByLabel(data.label))
-        end
-        TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
-        TriggerEvent('QBCore:Client:OnPlayerLoaded')
-        PostSpawnPlayer()
+        local inJail = IsPlayerInJail(function(inJailStatus)
+            PreSpawnPlayer()
+            if not inJailStatus then
+                isNew = false
+                if Config.Housing == "qb-housing" then
+                    TriggerServerEvent("apartments:server:CreateApartment", FindApartmentIndexByLabel(data.label), data.label)
+                elseif Config.Housing == "ps-housing" then
+                    TriggerServerEvent("ps-housing:server:createNewApartment", FindApartmentIndexByLabel(data.label))
+                end
+                TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                TriggerEvent('QBCore:Client:OnPlayerLoaded')
+            else
+                TriggerEvent("prison:client:Enter", inJailStatus)
+            end
+            PostSpawnPlayer()
+        end)
     elseif data.type == "house" then
-        PreSpawnPlayer()
-        TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
-        TriggerEvent('QBCore:Client:OnPlayerLoaded')
-        if Config.Housing == "qb-housing" then
-            TriggerEvent('qb-houses:client:enterOwnedHouse', FindHouseByLabel(data.houses, data.label))
-            TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
-            TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
-        elseif Config.Housing == "ps-housing" then
-            local property_id = data.houses.house.property_id
-            TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
-        end
-        PostSpawnPlayer()
+        local inJail = IsPlayerInJail(function(inJailStatus)
+            PreSpawnPlayer()
+            if not inJailStatus then
+                TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                TriggerEvent('QBCore:Client:OnPlayerLoaded')
+                if Config.Housing == "qb-housing" then
+                    TriggerEvent('qb-houses:client:enterOwnedHouse', FindHouseByLabel(data.houses, data.label))
+                    TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
+                    TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
+                elseif Config.Housing == "ps-housing" then
+                    local property_id = data.houses.house.property_id
+                    TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
+                end
+            else
+                TriggerEvent("prison:client:Enter", inJailStatus)
+            end
+            PostSpawnPlayer()
+        end)
     end
 end)
 
@@ -166,6 +186,22 @@ RegisterNUICallback("getHouses", function(data, cb)
         cb({ houses = myHouses, isNew = isNew, apartments = apartmentArray, config = Config, })
     end, { type = "houses" })
 end)
+
+RegisterNUICallback("getLocations", function(data, cb)
+    QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function(result)
+        cb(result)
+    end, { type = "locations" })
+end)
+
+function IsPlayerInJail(callback)
+    QBCore.Functions.GetPlayerData(function(PlayerData)
+        if PlayerData.metadata["injail"] and PlayerData.metadata["injail"] > 0 then
+            callback(PlayerData.metadata["injail"])
+        else
+            callback(false)
+        end
+    end)
+end
 
 function GenerateHouseLabel(house)
     if Config.Housing == "qb-housing" then
@@ -290,29 +326,17 @@ RegisterNetEvent('qb-spawn:client:openUI', function(value)
         SetCamActive(skyCamera, true)
         RenderScriptCams(true, false, 1, true, true)
     end)
-    if not isNew then
-        QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function() end, { type = "locations", target = "players" })
-    end
     Wait(500)
     SetDisplay(value)
-end)
-
-RegisterNetEvent('CL-SpawnSelector:RefreshLocations', function(locations, type)
-    SendNUIMessage({ 
-        action = 'Refresh',
-        type = type,
-        locations = locations,
-    })
 end)
 
 RegisterCommand("spawneditor", function()
     QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function(result)
         if result then
-            QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function() end, { type = "locations", target = "admins" })
             DoScreenFadeOut(250)
-            Wait(1000)
-            DoScreenFadeIn(250)
             SetEditorDisplay(true)
+            Wait(500)
+            DoScreenFadeIn(250)
         else
             QBCore.Functions.Notify("No permissions", "error")
         end

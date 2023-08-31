@@ -16,50 +16,59 @@ $(document).ready(function() {
     switch (event.data.action) {
       case "spawnSelector":
         if (event.data.status) {
-          setScriptStyle(config.ScriptStyle);
+          $.post(`https://${GetParentResourceName()}/getLocations`, JSON.stringify({}), function(result) {
+            if (result) {
+              refreshLocations(result, 'selector-location');
 
-          $('.spawn-selector, .selector-location').show();
-          $('.rp-logo').attr('src', config.ServerLogo);
+              setTimeout(() => {
+                setScriptStyle(config.ScriptStyle);
 
-          handleLocationsActions('selector-location')
-
-          if (event.data.isNew) {
-            const bigTextElement = document.createElement('div');
-            bigTextElement.textContent = 'Use the Houses button to choose your apartment';
-            bigTextElement.classList.add('new-house-text');
-        
-            document.body.appendChild(bigTextElement);
-            $('.spawn-selector .defaultmap').addClass('blur-effect');
-            $('.selector-location').hide();
-          }
+                $('.spawn-selector, .selector-location').show();
+                $('.rp-logo').attr('src', config.ServerLogo);
+      
+                handleLocationsActions('selector-location')
+      
+                if (event.data.isNew) {
+                  const bigTextElement = document.createElement('div');
+                  bigTextElement.textContent = 'Use the Houses button to choose your apartment';
+                  bigTextElement.classList.add('new-house-text');
+              
+                  document.body.appendChild(bigTextElement);
+                  $('.spawn-selector .defaultmap').addClass('blur-effect');
+                  $('.selector-location').hide();
+                }
+              }, 500); 
+            }
+          });
         } else {
           $('.spawn-selector').hide();
         }
         break;
       case "spawnEditor":
-        setScriptStyle(config.ScriptStyle);
-
-        $('.spawn-editor, .designed-location').show();
-        $('.rp-logo').attr('src', config.ServerLogo);
-
-        if (designedLocation !== null) {
-          const designedLocationElement = document.querySelector(`.designed-location[data-location-id="${locationCounter}"]`);
-          if (designedLocationElement) {
-            const iconContainer = designedLocationElement.querySelector('.location-icon');
-            const createBoxElement = document.querySelector(`.create-box[data-location-id="${locationCounter}"]`);
-            dragElement(designedLocationElement, iconContainer, true);
-            createBoxElement.style.display = 'block';
-          }
-        }
+        $.post(`https://${GetParentResourceName()}/getLocations`, JSON.stringify({}), function(result) {
+          if (result) {
+            refreshLocations(result, 'designed-location');
+              
+            setTimeout(() => {
+              setScriptStyle(config.ScriptStyle);
         
-        handleLocationsActions('designed-location')
-      break;
-      case "Refresh":
-        if (event.data.type === "editor") {
-          refreshLocations(event.data.locations, 'designed-location');
-        } else if (event.data.type === "selector") {
-          refreshLocations(event.data.locations, 'selector-location');
-        }
+              $('.spawn-editor, .designed-location').show();
+              $('.rp-logo').attr('src', config.ServerLogo);
+        
+              if (designedLocation !== null) {
+                const designedLocationElement = document.querySelector(`.designed-location[data-location-id="${locationCounter}"]`);
+                if (designedLocationElement) {
+                  const iconContainer = designedLocationElement.querySelector('.location-icon');
+                  const createBoxElement = document.querySelector(`.create-box[data-location-id="${locationCounter}"]`);
+                  dragElement(designedLocationElement, iconContainer, true);
+                  createBoxElement.style.display = 'block';
+                }
+              }
+        
+              handleLocationsActions('designed-location');
+            }, 500);
+          }
+        });
       break;
     }
   });
@@ -445,7 +454,7 @@ $(document).ready(function() {
 
       designedLocationElement.setAttribute('data-location-id', locationCounter++);
   
-      positionDesignedLocation(designedLocationElement, screenPosition);
+      positionDesignedLocation(designedLocationElement, screenPosition)
 
       const iconContainer = designedLocationElement.querySelector('.location-icon');
       iconContainer.style.cursor = 'pointer';
