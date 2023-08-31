@@ -67,7 +67,6 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
         local inJail = IsPlayerInJail(function(inJailStatus)
             PreSpawnPlayer()
             if not inJailStatus then
-                SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z)
                 TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
                 TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 if Config.Housing == "qb-housing" then
@@ -108,11 +107,12 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
                 TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
                 TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 if Config.Housing == "qb-housing" then
-                    TriggerEvent('qb-houses:client:enterOwnedHouse', FindHouseByLabel(data.houses, data.label))
+                    TriggerEvent('qb-houses:client:enterOwnedHouse', FindHouseByLabel(data.houses, data.label).house)
                     TriggerServerEvent('qb-houses:server:SetInsideMeta', 0, false)
                     TriggerServerEvent('qb-apartments:server:SetInsideMeta', 0, 0, false)
                 elseif Config.Housing == "ps-housing" then
-                    local property_id = data.houses.house.property_id
+                    local selectedHouse = FindHouseByLabel(data.houses, data.label)
+                    local property_id = selectedHouse.property_id
                     TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
                 end
             else
@@ -161,6 +161,12 @@ RegisterNUICallback("getLocationData", function(data, cb)
     end
 end)
 
+RegisterNUICallback("getLocations", function(data, cb)
+    QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function(result)
+        cb(result)
+    end, { type = "locations" })
+end)
+
 RegisterNUICallback("getHouses", function(data, cb)
     QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function(houses)
         local myHouses = {}
@@ -169,8 +175,8 @@ RegisterNUICallback("getHouses", function(data, cb)
                 local house = houses[i]
 
                 myHouses[#myHouses+1] = {
-                    house = house.house,
-                    label = GenerateHouseLabel(house.house),
+                    house = house,
+                    label = GenerateHouseLabel(house),
                 }
             end
         end
@@ -187,11 +193,14 @@ RegisterNUICallback("getHouses", function(data, cb)
     end, { type = "houses" })
 end)
 
-RegisterNUICallback("getLocations", function(data, cb)
-    QBCore.Functions.TriggerCallback('CL-SpawnSelector:GetInfo', function(result)
-        cb(result)
-    end, { type = "locations" })
-end)
+function FindHouseByLabel(houses, label)
+    for index, myHouse in pairs(houses) do
+        if myHouse.label == label then
+            return myHouse.house
+        end
+    end
+    return nil
+end
 
 function IsPlayerInJail(callback)
     QBCore.Functions.GetPlayerData(function(PlayerData)
@@ -205,21 +214,12 @@ end
 
 function GenerateHouseLabel(house)
     if Config.Housing == "qb-housing" then
-        return Houses[house].adress
+        return Houses[house.house].adress
     elseif Config.Housing == "ps-housing" then
         return (house.apartment or house.street) .. " " .. house.property_id
     else
         return ""
     end
-end
-
-function FindHouseByLabel(houses, label)
-    for index, myHouse in pairs(houses) do
-        if myHouse.label == label then
-            return myHouse.house
-        end
-    end
-    return nil
 end
 
 function FindApartmentIndexByLabel(label)
