@@ -14,6 +14,10 @@ local Houses = {}
 
 local apartments = {}
 
+RegisterNetEvent("onResourceStart", function()
+    isNew = false
+end)
+
 if Config.ScriptStyle == "dark" or Config.ScriptStyle == "natural" then
     disableStyleChanges = true
 end
