@@ -77,7 +77,6 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
                     TriggerServerEvent('ps-housing:server:resetMetaData')
                 end
                 Wait(500)
-                SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z - 1.0001)
                 SetEntityHeading(ped, data.coords.w)
             else
                 TriggerEvent("prison:client:Enter", inJailStatus)
