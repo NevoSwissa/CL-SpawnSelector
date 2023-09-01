@@ -196,7 +196,7 @@ $(document).ready(function() {
         resolution: {
           width: screenWidth,
           height: screenHeight
-        }
+        },
       };
       $.post(`https://${GetParentResourceName()}/modifyData`, JSON.stringify({
         type: "addlocation",

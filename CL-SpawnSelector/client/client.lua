@@ -67,6 +67,7 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
         local inJail = IsPlayerInJail(function(inJailStatus)
             PreSpawnPlayer()
             if not inJailStatus then
+                SetEntityCoords(ped, data.coords.x, data.coords.y, data.coords.z)
                 TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
                 TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 if Config.Housing == "qb-housing" then
