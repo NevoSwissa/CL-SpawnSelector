@@ -58,6 +58,8 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
                     TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
                     TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 else
+                    TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                    TriggerEvent('QBCore:Client:OnPlayerLoaded')
                     TriggerEvent("prison:client:Enter", inJailStatus)
                 end
                 PostSpawnPlayer()
@@ -79,6 +81,8 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
                 Wait(500)
                 SetEntityHeading(ped, data.coords.w)
             else
+                TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 TriggerEvent("prison:client:Enter", inJailStatus)
             end
             PostSpawnPlayer()
@@ -96,6 +100,8 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
                 TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
                 TriggerEvent('QBCore:Client:OnPlayerLoaded')
             else
+                TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 TriggerEvent("prison:client:Enter", inJailStatus)
             end
             PostSpawnPlayer()
@@ -116,6 +122,8 @@ RegisterNUICallback("spawnPlayer", function(data, cb)
                     TriggerServerEvent('ps-housing:server:enterProperty', tostring(property_id))
                 end
             else
+                TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+                TriggerEvent('QBCore:Client:OnPlayerLoaded')
                 TriggerEvent("prison:client:Enter", inJailStatus)
             end
             PostSpawnPlayer()
